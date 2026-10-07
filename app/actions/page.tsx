@@ -1,0 +1,1 @@
+import Guard from '@/components/Guard';import ActionsClient from './ActionsClient';export default async function Actions(){return <Guard><h1 className="page-title">Geräteaktionen</h1><p className="page-sub">Verwaltungsaktionen für ausgewählte Geräte.</p><ActionsClient/></Guard>}

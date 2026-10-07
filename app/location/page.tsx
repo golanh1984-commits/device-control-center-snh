@@ -1,0 +1,1 @@
+import Guard from '@/components/Guard';import LocationClient from './LocationClient';export default async function Location(){return <Guard><h1 className="page-title">Standortabfrage</h1><p className="page-sub">Zeitraum und Gerätefilter eingeben und Standortinformationen anzeigen.</p><LocationClient/></Guard>}

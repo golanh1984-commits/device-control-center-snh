@@ -1,0 +1,1 @@
+import Guard from '@/components/Guard';import MapClient from '@/components/MapClient';export default async function MapPage(){return <Guard><h1 className="page-title">Karte</h1><p className="page-sub">Standortübersicht mit Straßen-, Satelliten- und Hybridansicht.</p><MapClient/></Guard>}
