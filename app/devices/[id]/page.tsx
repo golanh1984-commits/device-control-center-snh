@@ -1,628 +1,271 @@
-```tsx
-'use client';
+import Link from 'next/link';
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import {
-  ArrowLeft,
-  Smartphone,
-  MapPin,
-  BatteryMedium,
-  WifiOff,
-  Bell,
-  RefreshCw,
-  ShieldCheck,
-  User,
-  Building2,
-  Hash,
-  Radio,
-  Clock3,
-  Navigation,
-  FileText,
-  Activity,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
-  Lock,
-  Signal,
-  Settings,
-  Copy,
-} from 'lucide-react';
+const device = {
+  name: 'iPhone 15 Pro von Sozan Evdal',
+  assetId: 'SNH-IPH-015',
+  type: 'iPhone',
+  manufacturer: 'Apple',
+  model: 'iPhone 15 Pro',
+  serial: 'SNH-IPH15-SOZAN',
+  imei: '35 123456 789012 3',
+  user: 'Sozan Evdal',
+  department: 'Verwaltung',
+  status: 'Online',
+  battery: '82 %',
+  sim: 'Unbekannt / blockiert',
+  lastContact: '28.09.2026 · 21:37:33',
+  address: 'Hannoversche Str. 1',
+  city: '30629 Hannover-Misburg-Anderten',
+  accuracy: 'ca. 15 m',
+};
 
-export default function DevicePage() {
-  const router = useRouter();
-  const params = useParams();
+const history = [
+  {
+    title: 'Standortabfrage',
+    detail: 'Letzte bekannte Position wurde abgerufen.',
+    state: 'Erfolgreich',
+    color: 'text-emerald-400',
+  },
+  {
+    title: 'Gerätestatus',
+    detail: 'Gerät meldet sich mit Status Online.',
+    state: 'Online',
+    color: 'text-emerald-400',
+  },
+  {
+    title: 'SIM-Status',
+    detail: 'SIM-Status konnte nicht eindeutig ermittelt werden.',
+    state: 'Unbekannt',
+    color: 'text-amber-400',
+  },
+  {
+    title: 'Letzter Kontakt',
+    detail: '28.09.2026 · 21:37:33',
+    state: 'Gespeichert',
+    color: 'text-sky-400',
+  },
+];
 
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const deviceId = String(params?.id ?? '');
-
-  const device = {
-    name: 'iPhone 15 Pro von Sozan Evdal',
-    model: 'iPhone 15 Pro',
-    manufacturer: 'Apple',
-    type: 'iPhone',
-    assetId: 'SNH-MOB-00147',
-    serial: 'SNH-IP15P-48291',
-    imei: '35 784200 921847 6',
-    user: 'Sozan Evdal',
-    department: 'Verwaltung',
-    status: 'Offline',
-    battery: 64,
-    sim: 'Gesperrt / unbekannt',
-    lastContact: '28.09.2026 · 21:37:33',
-    address: 'Hannoversche Str. 1',
-    city: '30629 Hannover-Misburg-Anderten',
-    country: 'Deutschland',
-    latitude: '52.3758',
-    longitude: '9.8247',
-    accuracy: 'ca. 18 m',
-  };
-
-  function showMessage(text: string) {
-    setMessage(text);
-
-    setTimeout(() => {
-      setMessage('');
-    }, 4000);
-  }
-
-  function runAction(text: string) {
-    setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-      showMessage(text);
-    }, 900);
-  }
-
-  function copyText(text: string) {
-    navigator.clipboard.writeText(text);
-    showMessage('Wert wurde kopiert.');
-  }
-
-  if (deviceId !== 'iphone-sozan') {
-    return (
-      <main className="min-h-screen bg-[#071019] text-slate-200 flex items-center justify-center p-8">
-        <div className="w-full max-w-xl rounded-2xl border border-[#203544] bg-[#0c1822] p-10 text-center">
-          <XCircle className="mx-auto mb-5 text-red-400" size={44} />
-
-          <h1 className="text-2xl font-semibold">
-            Gerät nicht gefunden
-          </h1>
-
-          <p className="mt-3 text-sm leading-6 text-slate-500">
-            Das angeforderte Gerät ist in der lokalen Geräteverwaltung
-            nicht vorhanden.
-          </p>
-
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#21678f] bg-[#174e72] px-4 py-2.5 text-sm text-white hover:bg-[#1b628e]"
-          >
-            <ArrowLeft size={16} />
-            Zurück zum Dashboard
-          </button>
-        </div>
-      </main>
-    );
-  }
-
+export default function DeviceDetailPage() {
   return (
-    <main className="min-h-screen bg-[#071019] text-slate-200">
-      <div className="mx-auto max-w-[1500px] p-7">
+    <main className="min-h-screen bg-[#061018] text-white">
+      <div className="border-b border-[#19303d] bg-[#08151e]">
+        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-8 py-5">
+          <div>
+            <Link
+              href="/dashboard/devices"
+              className="text-sm text-slate-400 transition hover:text-white"
+            >
+              ← Zurück zu Geräte
+            </Link>
 
-        {/* Kopfbereich */}
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="inline-flex items-center gap-2 rounded-lg border border-[#223544] bg-[#0d1822] px-4 py-2.5 text-sm text-slate-300 hover:border-[#345064] hover:bg-[#132331]"
-          >
-            <ArrowLeft size={16} />
-            Dashboard
-          </button>
-
-          <div className="text-xs text-slate-600">
-            Geräteverwaltung / Geräte / {device.name}
-          </div>
-        </div>
-
-        {/* Hero */}
-        <section className="rounded-2xl border border-[#203544] bg-gradient-to-br from-[#11222f] to-[#0a151e] p-6 shadow-2xl">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
-
-            <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#28465a] bg-[#122738] text-[#73b8e7]">
-                <Smartphone size={32} />
+            <div className="mt-4 flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#294654] bg-[#0d202c] text-2xl">
+                
               </div>
 
               <div>
-                <div className="mb-1 text-[11px] uppercase tracking-[1.5px] text-[#7190a4]">
-                  Gerätedetails
-                </div>
-
-                <h1 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-2xl font-semibold">
                   {device.name}
                 </h1>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  {device.manufacturer} · {device.model} · {device.assetId}
+                <p className="mt-1 text-sm text-slate-400">
+                  {device.model} · {device.assetId}
                 </p>
-
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[#34434e] bg-[#707e8b]/10 px-3 py-1.5 text-xs text-slate-400">
-                  <span className="h-2 w-2 rounded-full bg-slate-500" />
-                  Offline · letzter Kontakt {device.lastContact}
-                </div>
               </div>
             </div>
+          </div>
 
-            <div className="flex flex-wrap gap-2">
-              <button
-                disabled={loading}
-                onClick={() =>
-                  runAction('Standortabfrage wurde lokal protokolliert.')
-                }
-                className="inline-flex items-center gap-2 rounded-lg border border-[#293d4c] bg-[#101d28] px-3.5 py-2.5 text-sm text-slate-300 hover:bg-[#172a39] disabled:opacity-50"
+          <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            {device.status}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1500px] px-8 py-8">
+        <div className="grid grid-cols-4 gap-4">
+          <StatusCard title="Gerätestatus" value={device.status} />
+          <StatusCard title="Batterie" value={device.battery} />
+          <StatusCard title="Letzter Kontakt" value="28.09.2026" />
+          <StatusCard title="Genauigkeit" value={device.accuracy} />
+        </div>
+
+        <div className="mt-6 grid grid-cols-[1.5fr_1fr] gap-6">
+          <section className="overflow-hidden rounded-2xl border border-[#1d3542] bg-[#0a1720]">
+            <div className="flex items-center justify-between border-b border-[#1b303d] px-6 py-5">
+              <div>
+                <h2 className="text-lg font-semibold">Letzter bekannter Standort</h2>
+                <p className="mt-1 text-xs text-slate-500">
+                  Gespeicherte / simulierte Standortdaten
+                </p>
+              </div>
+
+              <Link
+                href="/dashboard/map"
+                className="rounded-lg border border-[#284451] bg-[#0d202b] px-4 py-2 text-xs text-slate-300 transition hover:bg-[#122936]"
               >
-                <MapPin size={15} />
-                Standort abfragen
-              </button>
-
-              <button
-                disabled={loading}
-                onClick={() =>
-                  runAction(
-                    'Klingeln wurde lokal simuliert. Es wurde kein echtes Gerät angesteuert.'
-                  )
-                }
-                className="inline-flex items-center gap-2 rounded-lg border border-[#293d4c] bg-[#101d28] px-3.5 py-2.5 text-sm text-slate-300 hover:bg-[#172a39] disabled:opacity-50"
-              >
-                <Bell size={15} />
-                Klingeln
-              </button>
-
-              <button
-                disabled={loading}
-                onClick={() =>
-                  runAction('Gerätestatus wurde lokal aktualisiert.')
-                }
-                className="inline-flex items-center gap-2 rounded-lg border border-[#21678f] bg-[#174e72] px-3.5 py-2.5 text-sm text-white hover:bg-[#1b628e] disabled:opacity-50"
-              >
-                <RefreshCw size={15} />
-                Status aktualisieren
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Meldung */}
-        {message && (
-          <div className="mt-4 flex items-center gap-2 rounded-lg border border-[#28506a] bg-[#0c2433] px-4 py-3 text-sm text-[#b9ddf3]">
-            <CheckCircle2 size={17} />
-            {message}
-          </div>
-        )}
-
-        {/* Statuskarten */}
-        <section className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-
-          <div className="rounded-xl border border-[#1e3341] bg-[#0c1822] p-4">
-            <div className="flex items-center justify-between text-xs text-slate-500">
-              <span>Status</span>
-              <WifiOff size={17} className="text-[#6fa8ca]" />
+                Karte öffnen
+              </Link>
             </div>
 
-            <div className="mt-3 text-xl font-semibold">
-              Offline
-            </div>
-
-            <div className="mt-1 text-[11px] text-slate-600">
-              Letzter Kontakt 28.09.2026 · 21:37
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-[#1e3341] bg-[#0c1822] p-4">
-            <div className="flex items-center justify-between text-xs text-slate-500">
-              <span>Batterie</span>
-              <BatteryMedium size={17} className="text-[#6fa8ca]" />
-            </div>
-
-            <div className="mt-3 text-xl font-semibold">
-              {device.battery}%
-            </div>
-
-            <div className="mt-1 text-[11px] text-slate-600">
-              Letzter bekannter Wert
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-[#1e3341] bg-[#0c1822] p-4">
-            <div className="flex items-center justify-between text-xs text-slate-500">
-              <span>SIM</span>
-              <Signal size={17} className="text-[#6fa8ca]" />
-            </div>
-
-            <div className="mt-3 text-xl font-semibold">
-              Gesperrt
-            </div>
-
-            <div className="mt-1 text-[11px] text-slate-600">
-              Status unbekannt
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-[#1e3341] bg-[#0c1822] p-4">
-            <div className="flex items-center justify-between text-xs text-slate-500">
-              <span>Genauigkeit</span>
-              <Navigation size={17} className="text-[#6fa8ca]" />
-            </div>
-
-            <div className="mt-3 text-xl font-semibold">
-              {device.accuracy}
-            </div>
-
-            <div className="mt-1 text-[11px] text-slate-600">
-              Letzter bekannter Standort
-            </div>
-          </div>
-        </section>
-
-        {/* Hauptbereich */}
-        <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[1.1fr_0.9fr]">
-
-          {/* Linke Seite */}
-          <div className="space-y-5">
-
-            {/* Geräteinformationen */}
-            <section className="overflow-hidden rounded-xl border border-[#1d323f] bg-[#0b1721]">
-              <div className="flex items-center justify-between border-b border-[#1b303d] px-5 py-4">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Smartphone size={17} className="text-[#6da9ca]" />
-                  Geräteinformationen
-                </div>
-
-                <span className="text-[10px] uppercase tracking-widest text-slate-600">
-                  {device.assetId}
-                </span>
+            <div className="relative h-[430px] overflow-hidden bg-[#101b20]">
+              <div className="absolute inset-0 opacity-60">
+                <div className="absolute left-[8%] top-[18%] h-[7px] w-[82%] rotate-[12deg] bg-[#2b3639]" />
+                <div className="absolute left-[3%] top-[52%] h-[9px] w-[94%] rotate-[-8deg] bg-[#303b3e]" />
+                <div className="absolute left-[20%] top-[5%] h-[92%] w-[7px] rotate-[24deg] bg-[#283438]" />
+                <div className="absolute left-[64%] top-[-10%] h-[120%] w-[8px] rotate-[-19deg] bg-[#303b3e]" />
+                <div className="absolute left-[37%] top-[34%] h-[180px] w-[180px] rounded-full border border-[#334449]" />
+                <div className="absolute left-[42%] top-[40%] h-[90px] w-[90px] rounded-full border border-[#334449]" />
               </div>
 
-              <div className="p-5">
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-
-                  {[
-                    ['Gerätename', device.name],
-                    ['Gerätetyp', device.type],
-                    ['Hersteller', device.manufacturer],
-                    ['Modell', device.model],
-                    ['Asset-ID', device.assetId],
-                    ['Seriennummer', device.serial],
-                    ['IMEI', device.imei],
-                    ['SIM-Status', device.sim],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="rounded-lg border border-[#1b303d] bg-[#0e1c27] p-3"
-                    >
-                      <div className="mb-1.5 text-[11px] text-slate-600">
-                        {label}
-                      </div>
-
-                      <div className="flex items-center gap-2 text-xs text-slate-300">
-                        {label === 'Asset-ID' && <Hash size={13} />}
-
-                        {label === 'SIM-Status' && <Radio size={13} />}
-
-                        <span className="break-all">
-                          {value}
-                        </span>
-
-                        {(label === 'Asset-ID' ||
-                          label === 'Seriennummer' ||
-                          label === 'IMEI') && (
-                          <button
-                            onClick={() => copyText(value)}
-                            className="ml-auto text-slate-600 hover:text-slate-300"
-                          >
-                            <Copy size={13} />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+              <div className="absolute left-[53%] top-[47%]">
+                <div className="relative">
+                  <div className="absolute -inset-5 animate-pulse rounded-full bg-cyan-400/10" />
+                  <div className="relative flex h-12 w-12 items-center justify-center rounded-full border-4 border-white bg-cyan-500 shadow-xl shadow-cyan-500/20">
+                    <span className="h-3 w-3 rounded-full bg-white" />
+                  </div>
                 </div>
+              </div>
+
+              <div className="absolute bottom-5 left-5 rounded-xl border border-[#29434f] bg-[#07121a]/95 px-5 py-4 backdrop-blur">
+                <div className="text-xs text-slate-500">Letzte bekannte Position</div>
+                <div className="mt-1 text-sm font-medium">
+                  {device.address}
+                </div>
+                <div className="text-xs text-slate-400">
+                  {device.city}
+                </div>
+                <div className="mt-2 text-[11px] text-slate-500">
+                  {device.lastContact} · Genauigkeit {device.accuracy}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div className="space-y-6">
+            <section className="rounded-2xl border border-[#1d3542] bg-[#0a1720]">
+              <div className="border-b border-[#1b303d] px-6 py-5">
+                <h2 className="text-lg font-semibold">Geräteinformationen</h2>
+              </div>
+
+              <div className="divide-y divide-[#172b36]">
+                <InfoRow label="Gerät" value={device.name} />
+                <InfoRow label="Typ" value={device.type} />
+                <InfoRow label="Hersteller" value={device.manufacturer} />
+                <InfoRow label="Modell" value={device.model} />
+                <InfoRow label="Asset-ID" value={device.assetId} />
+                <InfoRow label="Benutzer" value={device.user} />
+                <InfoRow label="Abteilung" value={device.department} />
               </div>
             </section>
 
-            {/* Standort */}
-            <section className="overflow-hidden rounded-xl border border-[#1d323f] bg-[#0b1721]">
-              <div className="flex items-center justify-between border-b border-[#1b303d] px-5 py-4">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <MapPin size={17} className="text-[#6da9ca]" />
-                  Letzter bekannter Standort
-                </div>
-
-                <span className="text-[10px] uppercase tracking-widest text-slate-600">
-                  28.09.2026 · 21:37:33
-                </span>
+            <section className="rounded-2xl border border-[#1d3542] bg-[#0a1720]">
+              <div className="border-b border-[#1b303d] px-6 py-5">
+                <h2 className="text-lg font-semibold">Technische Daten</h2>
               </div>
 
-              <div className="relative h-[330px] overflow-hidden bg-[#10202b]">
-
-                <div className="absolute left-[-10%] top-[48%] h-3 w-[130%] rotate-[-17deg] bg-slate-400/10" />
-
-                <div className="absolute left-[-10%] top-[25%] h-2 w-[130%] rotate-[27deg] bg-slate-400/10" />
-
-                <div className="absolute left-[20%] top-[18%] text-[10px] text-slate-600">
-                  Misburg-Anderten
-                </div>
-
-                <div className="absolute left-[62%] top-[62%] text-[10px] text-slate-600">
-                  Hannoversche Straße
-                </div>
-
-                <div className="absolute left-[18%] top-[76%] text-[10px] text-slate-600">
-                  Hannover
-                </div>
-
-                <div className="absolute left-[57%] top-[49%] h-5 w-5 rounded-full border-4 border-white/90 bg-red-400 shadow-[0_0_0_9px_rgba(248,113,113,0.18)]" />
-
-                <div className="absolute bottom-5 left-5 rounded-lg border border-[#304653] bg-[#061018]/95 px-4 py-3">
-                  <div className="text-xs font-semibold">
-                    {device.address}
-                  </div>
-
-                  <div className="mt-1 text-[10px] text-slate-500">
-                    {device.city} · Genauigkeit {device.accuracy}
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-5">
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-
-                  <div className="rounded-lg border border-[#1b303d] bg-[#0e1c27] p-3">
-                    <div className="text-[11px] text-slate-600">
-                      Adresse
-                    </div>
-
-                    <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-300">
-                      <MapPin size={13} />
-                      {device.address}
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-[#1b303d] bg-[#0e1c27] p-3">
-                    <div className="text-[11px] text-slate-600">
-                      Ort
-                    </div>
-
-                    <div className="mt-1.5 text-xs text-slate-300">
-                      {device.city}
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-[#1b303d] bg-[#0e1c27] p-3">
-                    <div className="text-[11px] text-slate-600">
-                      Koordinaten
-                    </div>
-
-                    <div className="mt-1.5 text-xs text-slate-300">
-                      {device.latitude}, {device.longitude}
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-[#1b303d] bg-[#0e1c27] p-3">
-                    <div className="text-[11px] text-slate-600">
-                      Zeitpunkt
-                    </div>
-
-                    <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-300">
-                      <Clock3 size={13} />
-                      {device.lastContact}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex gap-3 rounded-lg border border-[#574c2d] bg-[#211e13] p-3 text-xs leading-5 text-[#c8b77e]">
-                  <AlertTriangle size={17} className="mt-0.5 shrink-0" />
-
-                  <div>
-                    <strong>Hinweis zum Standort</strong>
-                    <br />
-                    Der angezeigte Standort ist der zuletzt lokal gespeicherte
-                    Standort. Das Gerät ist aktuell offline und der SIM-Status
-                    ist gesperrt bzw. unbekannt.
-                  </div>
-                </div>
+              <div className="divide-y divide-[#172b36]">
+                <InfoRow label="Seriennummer" value={device.serial} />
+                <InfoRow label="IMEI" value={device.imei} />
+                <InfoRow label="SIM" value={device.sim} />
+                <InfoRow label="Batterie" value={device.battery} />
+                <InfoRow label="Letzter Kontakt" value={device.lastContact} />
               </div>
             </section>
-
           </div>
+        </div>
 
-          {/* Rechte Seite */}
-          <div className="space-y-5">
+        <div className="mt-6 grid grid-cols-2 gap-6">
+          <section className="rounded-2xl border border-[#1d3542] bg-[#0a1720]">
+            <div className="border-b border-[#1b303d] px-6 py-5">
+              <h2 className="text-lg font-semibold">Aktionen</h2>
+              <p className="mt-1 text-xs text-slate-500">
+                Aktionen sind lokal simuliert.
+              </p>
+            </div>
 
-            {/* Aktionen */}
-            <section className="rounded-xl border border-[#1d323f] bg-[#0b1721]">
-              <div className="border-b border-[#1b303d] px-5 py-4">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Activity size={17} className="text-[#6da9ca]" />
-                  Schnellaktionen
-                </div>
-              </div>
+            <div className="grid grid-cols-2 gap-3 p-6">
+              <ActionButton label="Gerät klingeln lassen" />
+              <ActionButton label="Standortabfrage starten" />
+              <ActionButton label="Bericht erstellen" />
+              <ActionButton label="Adresse kopieren" />
+            </div>
+          </section>
 
-              <div className="grid grid-cols-1 gap-2 p-5 sm:grid-cols-2">
+          <section className="rounded-2xl border border-[#1d3542] bg-[#0a1720]">
+            <div className="border-b border-[#1b303d] px-6 py-5">
+              <h2 className="text-lg font-semibold">Verlauf</h2>
+            </div>
 
-                {[
-                  {
-                    icon: MapPin,
-                    title: 'Standort abfragen',
-                    text: 'Letzten bekannten Standort anzeigen.',
-                    action: () =>
-                      runAction(
-                        'Standortabfrage wurde lokal protokolliert.'
-                      ),
-                  },
-                  {
-                    icon: Bell,
-                    title: 'Gerät klingeln lassen',
-                    text: 'Aktion wird lokal simuliert.',
-                    action: () =>
-                      runAction(
-                        'Klingeln wurde lokal simuliert. Kein echtes Gerät wurde angesteuert.'
-                      ),
-                  },
-                  {
-                    icon: RefreshCw,
-                    title: 'Status aktualisieren',
-                    text: 'Lokale Gerätedaten aktualisieren.',
-                    action: () =>
-                      runAction('Gerätestatus wurde lokal aktualisiert.'),
-                  },
-                  {
-                    icon: FileText,
-                    title: 'Bericht erstellen',
-                    text: 'Geräteinformationen sammeln.',
-                    action: () =>
-                      runAction('Gerätebericht wurde lokal vorbereitet.'),
-                  },
-                ].map((item) => {
-                  const Icon = item.icon;
-
-                  return (
-                    <button
-                      key={item.title}
-                      onClick={item.action}
-                      className="rounded-lg border border-[#1f3543] bg-[#0e1c27] p-4 text-left hover:border-[#3b5b6d] hover:bg-[#132533]"
-                    >
-                      <Icon size={19} className="text-[#6fa9cb]" />
-
-                      <strong className="mt-2 block text-xs">
-                        {item.title}
-                      </strong>
-
-                      <span className="mt-1 block text-[10px] leading-4 text-slate-600">
-                        {item.text}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Sicherheit */}
-            <section className="rounded-xl border border-[#1d323f] bg-[#0b1721]">
-              <div className="border-b border-[#1b303d] px-5 py-4">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <ShieldCheck size={17} className="text-[#6da9ca]" />
-                  Sicherheit
-                </div>
-              </div>
-
-              <div className="p-5">
-
-                {[
-                  {
-                    icon: Lock,
-                    title: 'Gerätesperre',
-                    detail: 'Sicherheitsstatus',
-                    state: 'Aktiv',
-                    color: 'text-green-400',
-                  },
-                  {
-                    icon: ShieldCheck,
-                    title: 'Verwaltung',
-                    detail: 'Lokale Geräteverwaltung',
-                    state: 'Aktiv',
-                    color: 'text-green-400',
-                  },
-                  {
-                    icon: Radio,
-                    title: 'SIM',
-                    detail: 'Gesperrt / unbekannt',
-                    state: 'Prüfen',
-                    color: 'text-yellow-400',
-                  },
-                ].map((item) => {
-                  const Icon = item.icon;
-
-                  return (
-                    <div
-                      key={item.title}
-                      className="flex items-center justify-between border-b border-[#182b37] py-3 last:border-0"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon size={16} className="text-[#6da9ca]" />
-
-                        <div>
-                          <div className="text-xs">
-                            {item.title}
-                          </div>
-
-                          <div className="mt-1 text-[10px] text-slate-600">
-                            {item.detail}
-                          </div>
-                        </div>
-                      </div>
-
-                      <span className={`text-xs ${item.color}`}>
-                        {item.state}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Benutzer */}
-            <section className="rounded-xl border border-[#1d323f] bg-[#0b1721]">
-              <div className="flex items-center justify-between border-b border-[#1b303d] px-5 py-4">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <User size={17} className="text-[#6da9ca]" />
-                  Benutzerzuordnung
-                </div>
-
-                <button
-                  onClick={() =>
-                    runAction('Benutzerverwaltung wurde geöffnet.')
-                  }
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#293d4c] bg-[#101d28] px-3 py-2 text-xs text-slate-300 hover:bg-[#172a39]"
+            <div className="px-6">
+              {history.map((item) => (
+                <div
+                  key={item.title}
+                  className="flex items-center justify-between border-b border-[#182b37] py-4 last:border-0"
                 >
-                  <Settings size={13} />
-                  Verwalten
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2">
-
-                <div className="rounded-lg border border-[#1b303d] bg-[#0e1c27] p-3">
-                  <div className="text-[11px] text-slate-600">
-                    Benutzer
+                  <div>
+                    <div className="text-sm">{item.title}</div>
+                    <div className="mt-1 text-xs text-slate-500">
+                      {item.detail}
+                    </div>
                   </div>
 
-                  <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-300">
-                    <User size={13} />
-                    {device.user}
-                  </div>
+                  <span className={`text-xs ${item.color}`}>
+                    {item.state}
+                  </span>
                 </div>
+              ))}
+            </div>
+          </section>
+        </div>
 
-                <div className="rounded-lg border border-[#1b303d] bg-[#0e1c27] p-3">
-                  <div className="text-[11px] text-slate-600">
-                    Abteilung
-                  </div>
+        <div className="mt-6 rounded-xl border border-amber-500/20 bg-amber-500/5 px-5 py-4 text-xs text-amber-300">
+          Hinweis: Die hier angezeigten Standort- und Geräteaktionen sind
+          lokale bzw. simulierte Testdaten. Es wird kein echtes iPhone
+          ferngesteuert oder heimlich verfolgt.
+        </div>
+      </div>
+    </main>
+  );
+}
 
-                  <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-300">
-                    <Building2 size={13} />
-                    {device.department}
-                  </div>
-                </div>
+function StatusCard({
+  title,
+  value,
+}: {
+  title: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-[#1d3542] bg-[#0a1720] px-5 py-5">
+      <div className="text-xs text-slate-500">{title}</div>
+      <div className="mt-2 text-lg font-semibold">{value}</div>
+    </div>
+  );
+}
 
-              </div>
-            </section>
+function InfoRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-6 px-6 py-3">
+      <span className="text-xs text-slate-500">{label}</span>
+      <span className="text-right text-xs text-slate-200">{value}</span>
+    </div>
+  );
+}
 
-            {/* Verlauf */}
-            <section className="rounded-xl border border-[#1d323f] bg-[#0b1721]">
-              <div className="border-b border-[#1b303d] px-5 py-4">
-                <div className="flex items-center gap
-```
+function ActionButton({ label }: { label: string }) {
+  return (
+    <button
+      type="button"
+      className="rounded-xl border border-[#294451] bg-[#0d202b] px-4 py-3 text-left text-xs text-slate-200 transition hover:bg-[#122b38]"
+    >
+      {label}
+    </button>
+  );
+}
